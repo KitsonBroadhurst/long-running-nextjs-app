@@ -8,11 +8,18 @@ const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
   const [fetching, setFetching] = useState(false);
+  const [time, setTime] = useState(60);
 
   const handleClick = async () => {
     try {
       setFetching(true);
-      const result = await fetch("/api/hello");
+      const result = await fetch("/api/hello", {
+        method: "POST",
+        headers: {
+          ContentType: "application/json",
+        },
+        body: JSON.stringify({ time }),
+      });
       const resultData = await result.json();
       console.log("resultData", resultData);
     } catch (error) {
@@ -64,17 +71,32 @@ export default function Home() {
             priority
           />
         </div>
-        <button
+        <div
           style={{
-            background: "white",
-            color: "black",
-            borderRadius: "4px",
-            padding: "12px",
+            display: "flex",
+            flexDirection: "column",
           }}
-          onClick={handleClick}
         >
-          {fetching ? "Fetching" : "Do some long fetch..."}
-        </button>
+          <input
+            type="number"
+            value={time}
+            onChange={(e) => setTime(e.target.value)}
+            style={{
+              marginBottom: "12px",
+            }}
+          />
+          <button
+            style={{
+              background: "white",
+              color: "black",
+              borderRadius: "4px",
+              padding: "12px",
+            }}
+            onClick={handleClick}
+          >
+            {fetching ? "Fetching" : "Do some long fetch..."}
+          </button>
+        </div>
       </main>
     </>
   );
